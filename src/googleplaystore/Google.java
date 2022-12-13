@@ -27,39 +27,56 @@ public class Google {
             // get index of Genre and Rating (unnecessary, can just use index 0,1,2)
             Integer ratingIndex = headerList.indexOf("Rating");
             Integer catIndex = headerList.indexOf("Category");
-            System.out.println("Index of Rating: " + ratingIndex);
-            System.out.println("Index of Genres: " + catIndex);
-            // System.out.println(headerList);
+            // System.out.println("Index of Rating: " + ratingIndex); // REMOVE
+            // System.out.println("Index of Genres: " + catIndex); // REMOVE
+            // System.out.println(headerList); // REMOVE
             
             // add genre(key) and rating(value - array) to hashmap
             while ((line = br.readLine()) != null) {
                 String[] rowArray = line.trim().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                List<String> rowList = new ArrayList<String>(Arrays.asList(rowArray));
-                System.out.println(rowList);
+                // List<String> rowList = new ArrayList<String>(Arrays.asList(rowArray));
+                // System.out.println(rowList);
 
                 String genreName = rowArray[catIndex];
-                System.out.println("Genre Name: " + genreName);
+                // System.out.println("Genre Name: " + genreName); // REMOVE
 
                 Double ratingValue = Double.parseDouble(rowArray[ratingIndex]); // convert String to double
-                System.out.println("Rating Value: " + ratingValue);
+                // System.out.println("Rating Value: " + ratingValue); // REMOVE
 
-                // // check if hashmap contains key (genreName)
-                // if (ratingsMap.containsKey(genreName)) {
-                //     ArrayList<Double> ratingsArray = ratingsMap.get(genreName); //extract valuels
-                //     ratingsArray.add(ratingValue); // dit values
-                //     ratingsMap.put(genreName, ratingsArray); // update array in hashmap value
-                    
-                // } else { // if no key, push key to genre array
-                //     ArrayList<Double> ratingsArray = new ArrayList<Double>();
-                //     ratingsArray.add(ratingValue);
-                //     ratingsMap.put(genreName, ratingsArray);
-                // }
-
+                if (!rowArray[ratingIndex].toLowerCase().equals("nan")) {
+                    // // check if hashmap contains key (genreName)
+                    if (ratingsMap.containsKey(genreName)) {
+                        ArrayList<Double> ratingsArray = ratingsMap.get(genreName); //extract valuels
+                        ratingsArray.add(ratingValue); // dit values
+                        ratingsMap.put(genreName, ratingsArray); // update array in hashmap value
+                        
+                    } else { // if no key, push key to genre array
+                        ArrayList<Double> ratingsArray = new ArrayList<Double>();
+                        ratingsArray.add(ratingValue);
+                        ratingsMap.put(genreName, ratingsArray);
+                    }
+                }
             } // while loop
 
-            System.out.println(ratingsMap);
+            // System.out.println(ratingsMap); // REMOVE
 
             // calculate average of array, push to ratings array (Use accumulator)
+            for (Map.Entry<String, ArrayList<Double>> set :ratingsMap.entrySet()) {
+                String category = set.getKey();
+                ArrayList<Double> ratings = set.getValue();
+                Integer count = 0;
+                Double totalRating = 0d;
+
+                
+                for (Double rating : ratings) {
+                    totalRating += rating;
+                    count++;
+                }
+
+                Double averageRating = totalRating / count;
+                
+                System.out.printf("%s - %.1f\n", set.getKey(), averageRating);
+            }
 
             // print out average rating of each genre
 
